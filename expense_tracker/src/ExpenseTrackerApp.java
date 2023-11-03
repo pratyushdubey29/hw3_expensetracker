@@ -38,6 +38,17 @@ public class ExpenseTrackerApp {
       }
     });
 
+      view.undoListener(e -> {
+          try{
+              String undoInput = view.getUndoInput();
+              controller.undoTransaction(Integer.parseInt(undoInput));
+
+          }catch(IllegalArgumentException exception) {
+              JOptionPane.showMessageDialog(view, exception.getMessage());
+              view.toFront();
+          }
+          });
+
       // Add action listener to the "Apply Category Filter" button
     view.addApplyCategoryFilterListener(e -> {
       try{
