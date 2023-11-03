@@ -51,9 +51,8 @@ public class ExpenseTrackerController {
     refresh();
     return true;
   }
-  public void undoTransaction(int index) {
+  public void undoTransaction(int index, List<Transaction> currentTransactions) {
 
-    List<Transaction> currentTransactions = model.getTransactions();
     if (index > currentTransactions.size() || index < 1){
       throw new IllegalArgumentException("The index is not valid.");
     }

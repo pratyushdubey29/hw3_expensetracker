@@ -1,9 +1,12 @@
 import javax.swing.JOptionPane;
 import controller.ExpenseTrackerController;
 import model.ExpenseTrackerModel;
+import model.Transaction;
 import view.ExpenseTrackerView;
 import model.Filter.AmountFilter;
 import model.Filter.CategoryFilter;
+
+import java.util.List;
 
 public class ExpenseTrackerApp {
 
@@ -40,8 +43,12 @@ public class ExpenseTrackerApp {
 
       view.undoListener(e -> {
           try{
+              List<Transaction> currentTransactions = model.getTransactions();
+              if (currentTransactions.isEmpty()){
+                  throw new IllegalArgumentException("The table is empty already! Add a transaction first.");
+              }
               String undoInput = view.getUndoInput();
-              controller.undoTransaction(Integer.parseInt(undoInput));
+              controller.undoTransaction(Integer.parseInt(undoInput), currentTransactions);
 
           }catch(IllegalArgumentException exception) {
               JOptionPane.showMessageDialog(view, exception.getMessage());

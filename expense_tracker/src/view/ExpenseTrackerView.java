@@ -85,7 +85,7 @@ public class ExpenseTrackerView extends JFrame {
     add(buttonPanel, BorderLayout.SOUTH);
   
     // Set frame properties
-    setSize(600, 400); // Increase the size for better visibility
+    setSize(800, 400); // Increase the size for better visibility
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
   
