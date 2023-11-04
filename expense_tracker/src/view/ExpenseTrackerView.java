@@ -44,6 +44,7 @@ public class ExpenseTrackerView extends JFrame {
 
     addTransactionBtn = new JButton("Add Transaction");
     undoBtn = new JButton("Undo Transaction");
+    undoBtn.setEnabled(false);
     // Create UI components
     JLabel amountLabel = new JLabel("Amount:");
     NumberFormat format = NumberFormat.getNumberInstance();
@@ -132,6 +133,10 @@ public class ExpenseTrackerView extends JFrame {
   }
     public String getUndoInput() {
         return JOptionPane.showInputDialog(this, "Enter Undo row:");
+    }
+
+    public void undoEnable(boolean val){
+      undoBtn.setEnabled(val);
     }
   public String getCategoryFilterInput() {
     return JOptionPane.showInputDialog(this, "Enter Category Filter:");

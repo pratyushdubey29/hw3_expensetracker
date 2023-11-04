@@ -39,20 +39,23 @@ public class ExpenseTrackerApp {
         JOptionPane.showMessageDialog(view, "Invalid amount or category entered");
         view.toFront();
       }
+      else {
+          view.undoEnable(true);
+      }
     });
 
       view.undoListener(e -> {
           try{
               List<Transaction> currentTransactions = model.getTransactions();
-              if (currentTransactions.isEmpty()){
-                  throw new IllegalArgumentException("The table is empty already! Add a transaction first.");
-              }
               String undoInput = view.getUndoInput();
               if (undoInput == null || undoInput.isEmpty()){
                   throw new IllegalArgumentException("The index is not valid.");
               }
               controller.undoTransaction(Integer.parseInt(undoInput), currentTransactions);
-
+              currentTransactions = model.getTransactions();
+              if (currentTransactions.isEmpty()){
+                  view.undoEnable(false);
+              }
           }catch(IllegalArgumentException exception) {
               JOptionPane.showMessageDialog(view, exception.getMessage());
               view.toFront();
