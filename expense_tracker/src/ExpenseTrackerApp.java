@@ -48,6 +48,9 @@ public class ExpenseTrackerApp {
                   throw new IllegalArgumentException("The table is empty already! Add a transaction first.");
               }
               String undoInput = view.getUndoInput();
+              if (undoInput == null || undoInput.isEmpty()){
+                  throw new IllegalArgumentException("The index is not valid.");
+              }
               controller.undoTransaction(Integer.parseInt(undoInput), currentTransactions);
 
           }catch(IllegalArgumentException exception) {

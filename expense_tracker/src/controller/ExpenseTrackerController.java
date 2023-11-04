@@ -58,7 +58,6 @@ public class ExpenseTrackerController {
     }
     else{
       Transaction toBeDeleted = currentTransactions.get(index - 1);
-      System.out.println(toBeDeleted.getAmount());
       model.removeTransaction(toBeDeleted);
       view.getTableModel().removeRow(index);
       refresh();
