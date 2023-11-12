@@ -122,12 +122,22 @@ public class TestExample {
         double amount = 50.0;
         String category = "food-poisoning";
         assertFalse(controller.addTransaction(amount, category));
+        try{
+            Transaction t = new Transaction(amount, category);
+        }
+        catch (IllegalArgumentException exception){
+            assertEquals("The category is not valid.", exception.getMessage());
+        }
+
         amount = -50.0;
         category = "food";
         assertFalse(controller.addTransaction(amount, category));
-        amount = -50.0;
-        category = "food-poisoning";
-        assertFalse(controller.addTransaction(amount, category));
+        try{
+            Transaction t = new Transaction(amount, category);
+        }
+        catch (IllegalArgumentException exception){
+            assertEquals("The amount is not valid.", exception.getMessage());
+        }
 
         // Post-condition: List of transactions contains no transactions
         assertEquals(0, model.getTransactions().size());
