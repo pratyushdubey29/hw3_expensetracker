@@ -49,6 +49,7 @@ public class ExpenseTrackerController {
     model.addTransaction(t);
     view.getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
     refresh();
+    view.unhighlightRows();
     return true;
   }
   public void undoTransaction(int index, List<Transaction> currentTransactions) {
@@ -62,7 +63,7 @@ public class ExpenseTrackerController {
       view.getTableModel().removeRow(index);
       refresh();
     }
-
+    view.unhighlightRows();
   }
 
   public void applyFilter() {

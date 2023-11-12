@@ -187,6 +187,10 @@ public class ExpenseTrackerView extends JFrame {
     return addTransactionBtn;
   }
 
+  public void unhighlightRows(){
+      transactionsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer());
+      transactionsTable.repaint();
+  }
 
   public void highlightRows(List<Integer> rowIndexes) {
       // The row indices are being used as hashcodes for the transactions.
