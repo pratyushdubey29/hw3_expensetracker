@@ -80,29 +80,6 @@ public class TestExample {
         assertEquals(amount, getTotalCost(), 0.01);
     }
 
-    @Test
-    public void testAddInvalidTransaction(){
-
-        // Pre-condition: List of transactions is empty
-        assertEquals(0, model.getTransactions().size());
-
-        // Perform the action: Add 3 types of invalid transactions
-        double amount = 50.0;
-        String category = "food-poisoning";
-        assertFalse(controller.addTransaction(amount, category));
-        amount = -50.0;
-        category = "food";
-        assertFalse(controller.addTransaction(amount, category));
-        amount = -50.0;
-        category = "food-poisoning";
-        assertFalse(controller.addTransaction(amount, category));
-
-        // Post-condition: List of transactions contains no transactions
-        assertEquals(0, model.getTransactions().size());
-
-        // Check the total amount
-        assertEquals(0, getTotalCost(), 0.01);
-    }
 
     @Test
     public void testRemoveTransaction() {
@@ -134,5 +111,28 @@ public class TestExample {
         double totalCost = getTotalCost();
         assertEquals(0.00, totalCost, 0.01);
     }
-    
+
+    @Test
+    public void testAddInvalidTransaction(){
+
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+
+        // Perform the action: Add 3 types of invalid transactions
+        double amount = 50.0;
+        String category = "food-poisoning";
+        assertFalse(controller.addTransaction(amount, category));
+        amount = -50.0;
+        category = "food";
+        assertFalse(controller.addTransaction(amount, category));
+        amount = -50.0;
+        category = "food-poisoning";
+        assertFalse(controller.addTransaction(amount, category));
+
+        // Post-condition: List of transactions contains no transactions
+        assertEquals(0, model.getTransactions().size());
+
+        // Check the total amount
+        assertEquals(0, getTotalCost(), 0.01);
+    }
 }
