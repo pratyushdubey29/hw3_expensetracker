@@ -39,9 +39,6 @@ public class ExpenseTrackerApp {
         JOptionPane.showMessageDialog(view, "Invalid amount or category entered");
         view.toFront();
       }
-      else {
-          view.undoEnable(true);
-      }
     });
 
       view.undoListener(e -> {

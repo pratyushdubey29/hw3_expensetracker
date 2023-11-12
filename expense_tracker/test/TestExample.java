@@ -1,9 +1,13 @@
 // package test;
 
+import java.awt.*;
 import java.util.Date;
 import java.util.List;
 import java.text.ParseException;
+import java.util.Objects;
 
+import model.Filter.AmountFilter;
+import model.Filter.CategoryFilter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,6 +15,9 @@ import controller.ExpenseTrackerController;
 import model.ExpenseTrackerModel;
 import model.Transaction;
 import view.ExpenseTrackerView;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
 
 import static org.junit.Assert.*;
 
@@ -134,5 +141,94 @@ public class TestExample {
 
         // Check the total amount
         assertEquals(0, getTotalCost(), 0.01);
+    }
+
+    @Test
+    public void testAmountFilter() {
+
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+
+        // Perform the action: Set filterType = AmountFilter with value 50
+        controller.setFilter(new AmountFilter(50));
+
+        // Perform the action: Add transactions to the model.
+        controller.addTransaction(50, "food");
+        controller.addTransaction(70, "bills");
+        controller.addTransaction(50, "bills");
+
+        // Perform the action: Apply filter.
+        controller.applyFilter();
+
+        JTable table = view.getTransactionsTable();
+
+        // Check the background of the cells of the highlighted rows... must be green.
+        for(int i = 0; i < table.getRowCount(); i++) {
+            for(int j = 0; j < table.getColumnCount(); j++) {
+                TableCellRenderer renderer = table.getCellRenderer(i, j);
+                Component component = table.prepareRenderer(renderer, i, j);
+                if(i == 0 || i == 2) {
+                    assertEquals(component.getBackground(), new Color(173, 255, 168));
+                } else {
+                    assertEquals(component.getBackground(), Color.WHITE);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testCategoryFilter() {
+
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+
+        // Perform the action: Set filterType = CategoryFilter with value bills
+        controller.setFilter(new CategoryFilter("bills"));
+
+        // Perform the action: Add transactions to the model.
+        controller.addTransaction(50, "food");
+        controller.addTransaction(70, "bills");
+        controller.addTransaction(50, "bills");
+
+        // Perform the action: Apply filter.
+        controller.applyFilter();
+
+        JTable table = view.getTransactionsTable();
+
+        // Check the background of the cells of the highlighted rows... must be green.
+        for(int i = 0; i < table.getRowCount(); i++) {
+            for(int j = 0; j < table.getColumnCount(); j++) {
+                TableCellRenderer renderer = table.getCellRenderer(i, j);
+                Component component = table.prepareRenderer(renderer, i, j);
+                if(i == 1 || i == 2) {
+                    assertEquals(component.getBackground(), new Color(173, 255, 168));
+                } else {
+                    assertEquals(component.getBackground(), Color.WHITE);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testUndoBtnDisabledForEmptyTransactions() {
+
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+
+        // Check that the undo button is disabled.
+        assertFalse(view.getUndoBtn().isEnabled());
+    }
+
+    @Test
+    public void testUndoBtnEnabledForNonEmptyTransactions() {
+
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+
+        // Perform the action: Add at least one valid transaction to the model.
+        controller.addTransaction(50, "food");
+
+        // Check that the undo button is enabled.
+        assertTrue(view.getUndoBtn().isEnabled());
     }
 }

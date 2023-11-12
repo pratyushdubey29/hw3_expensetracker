@@ -50,6 +50,7 @@ public class ExpenseTrackerController {
     view.getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
     refresh();
     view.unhighlightRows();
+    view.undoEnable(true);
     return true;
   }
   public void undoTransaction(int index, List<Transaction> currentTransactions) {

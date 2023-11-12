@@ -24,7 +24,7 @@ public class ExpenseTrackerView extends JFrame {
   private JTextField categoryFilterField;
   private JButton categoryFilterBtn;
 
-  private JButton undoBtn;
+    private JButton undoBtn;
 
   private JTextField amountFilterField;
   private JButton amountFilterBtn;
@@ -98,8 +98,8 @@ public class ExpenseTrackerView extends JFrame {
   }
     
 
-  public List<Transaction> getTransactionsTable() {
-    return (List<Transaction>) transactionsTable;
+  public JTable getTransactionsTable() {
+    return transactionsTable;
   }
 
   public double getAmountField() {
@@ -157,6 +157,10 @@ public class ExpenseTrackerView extends JFrame {
         return 0.0; // Default value (or any other appropriate value)
     }
   }
+
+    public JButton getUndoBtn() {
+        return undoBtn;
+    }
 
   public void refreshTable(List<Transaction> transactions) {
       // Clear existing rows
