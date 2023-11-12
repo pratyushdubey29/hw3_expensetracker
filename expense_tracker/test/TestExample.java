@@ -19,6 +19,8 @@ import view.ExpenseTrackerView;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 
+import javax.swing.table.DefaultTableModel;
+
 import static org.junit.Assert.*;
 
 
@@ -120,21 +122,65 @@ public class TestExample {
     }
 
     @Test
+    public void testAddValidTransaction() {
+
+        // Pre-condition: List of transactions is empty
+        assertEquals(0, model.getTransactions().size());
+
+        // Perform the action: Add 3 types of invalid transactions
+        assertTrue(controller.addTransaction(50.0, "food"));
+
+        Object[][] testAssertTable ={
+                {1, 50.0, "food", new Date().getTime()},{"Total", null, null, 50.0}
+        };
+        DefaultTableModel tableModel = view.getTableModel();
+        Date transactionDate = null;
+        try {
+            transactionDate = Transaction.dateFormatter.parse((String) tableModel.getValueAt(0, 3));
+        } catch (ParseException e) {
+            assertNotNull(transactionDate);
+        }
+
+        for (int i = 0; i < tableModel.getRowCount(); i++){
+            for (int j = 0; j < tableModel.getColumnCount(); j++){
+                if (i != tableModel.getRowCount() - 1 && j == tableModel.getColumnCount() -1){
+                    assertTrue((long) testAssertTable[i][j] - transactionDate.getTime() < 60000);
+                }
+                else{
+                    assertEquals(testAssertTable[i][j], tableModel.getValueAt(i, j));
+                }
+            }
+        }
+
+        // Post-condition: List of transactions contains one transaction and one total row
+        assertEquals(2, view.getTableModel().getRowCount());
+
+        // Check the total amount
+        assertEquals(50, (double) view.getTableModel().getValueAt(1, 3), 0.01);
+    }
+
+    @Test
     public void testAddInvalidTransaction(){
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
 
         // Perform the action: Add 3 types of invalid transactions
-        double amount = 50.0;
-        String category = "food-poisoning";
-        assertFalse(controller.addTransaction(amount, category));
-        amount = -50.0;
-        category = "food";
-        assertFalse(controller.addTransaction(amount, category));
-        amount = -50.0;
-        category = "food-poisoning";
-        assertFalse(controller.addTransaction(amount, category));
+        assertFalse(controller.addTransaction(50.0, "food-poisoning"));
+        try{
+            Transaction t = new Transaction(50.0, "food-poisoning");
+        }
+        catch (IllegalArgumentException exception){
+            assertEquals("The category is not valid.", exception.getMessage());
+        }
+
+        assertFalse(controller.addTransaction(-50.0, "food"));
+        try{
+            Transaction t = new Transaction(-50.0, "food");
+        }
+        catch (IllegalArgumentException exception){
+            assertEquals("The amount is not valid.", exception.getMessage());
+        }
 
         // Post-condition: List of transactions contains no transactions
         assertEquals(0, model.getTransactions().size());
