@@ -1,9 +1,12 @@
 import javax.swing.JOptionPane;
 import controller.ExpenseTrackerController;
 import model.ExpenseTrackerModel;
+import model.Transaction;
 import view.ExpenseTrackerView;
 import model.Filter.AmountFilter;
 import model.Filter.CategoryFilter;
+
+import java.util.List;
 
 public class ExpenseTrackerApp {
 
@@ -37,6 +40,24 @@ public class ExpenseTrackerApp {
         view.toFront();
       }
     });
+
+      view.undoListener(e -> {
+          try{
+              List<Transaction> currentTransactions = model.getTransactions();
+              String undoInput = view.getUndoInput();
+              if (undoInput == null || undoInput.isEmpty()){
+                  throw new IllegalArgumentException("The index is not valid.");
+              }
+              controller.undoTransaction(Integer.parseInt(undoInput), currentTransactions);
+              currentTransactions = model.getTransactions();
+              if (currentTransactions.isEmpty()){
+                  view.undoEnable(false);
+              }
+          }catch(IllegalArgumentException exception) {
+              JOptionPane.showMessageDialog(view, exception.getMessage());
+              view.toFront();
+          }
+          });
 
       // Add action listener to the "Apply Category Filter" button
     view.addApplyCategoryFilterListener(e -> {

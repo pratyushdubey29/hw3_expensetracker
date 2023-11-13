@@ -24,6 +24,8 @@ public class ExpenseTrackerView extends JFrame {
   private JTextField categoryFilterField;
   private JButton categoryFilterBtn;
 
+    private JButton undoBtn;
+
   private JTextField amountFilterField;
   private JButton amountFilterBtn;
 
@@ -41,7 +43,8 @@ public class ExpenseTrackerView extends JFrame {
     transactionsTable = new JTable(model);
 
     addTransactionBtn = new JButton("Add Transaction");
-
+    undoBtn = new JButton("Undo Transaction");
+    undoBtn.setEnabled(false);
     // Create UI components
     JLabel amountLabel = new JLabel("Amount:");
     NumberFormat format = NumberFormat.getNumberInstance();
@@ -71,6 +74,7 @@ public class ExpenseTrackerView extends JFrame {
     inputPanel.add(categoryLabel); 
     inputPanel.add(categoryField);
     inputPanel.add(addTransactionBtn);
+    inputPanel.add(undoBtn);
 
     JPanel buttonPanel = new JPanel();
     buttonPanel.add(amountFilterBtn);
@@ -82,7 +86,7 @@ public class ExpenseTrackerView extends JFrame {
     add(buttonPanel, BorderLayout.SOUTH);
   
     // Set frame properties
-    setSize(600, 400); // Increase the size for better visibility
+    setSize(800, 400); // Increase the size for better visibility
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
   
@@ -94,8 +98,8 @@ public class ExpenseTrackerView extends JFrame {
   }
     
 
-  public List<Transaction> getTransactionsTable() {
-    return (List<Transaction>) transactionsTable;
+  public JTable getTransactionsTable() {
+    return transactionsTable;
   }
 
   public double getAmountField() {
@@ -124,6 +128,16 @@ public class ExpenseTrackerView extends JFrame {
     categoryFilterBtn.addActionListener(listener);
   }
 
+  public void undoListener(ActionListener listener) {
+        undoBtn.addActionListener(listener);
+  }
+    public String getUndoInput() {
+        return JOptionPane.showInputDialog(this, "Enter Undo row:");
+    }
+
+    public void undoEnable(boolean val){
+      undoBtn.setEnabled(val);
+    }
   public String getCategoryFilterInput() {
     return JOptionPane.showInputDialog(this, "Enter Category Filter:");
 }
@@ -143,6 +157,10 @@ public class ExpenseTrackerView extends JFrame {
         return 0.0; // Default value (or any other appropriate value)
     }
   }
+
+    public JButton getUndoBtn() {
+        return undoBtn;
+    }
 
   public void refreshTable(List<Transaction> transactions) {
       // Clear existing rows
@@ -173,6 +191,10 @@ public class ExpenseTrackerView extends JFrame {
     return addTransactionBtn;
   }
 
+  public void unhighlightRows(){
+      transactionsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer());
+      transactionsTable.repaint();
+  }
 
   public void highlightRows(List<Integer> rowIndexes) {
       // The row indices are being used as hashcodes for the transactions.

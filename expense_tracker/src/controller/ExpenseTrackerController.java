@@ -49,7 +49,22 @@ public class ExpenseTrackerController {
     model.addTransaction(t);
     view.getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
     refresh();
+    view.unhighlightRows();
+    view.undoEnable(true);
     return true;
+  }
+  public void undoTransaction(int index, List<Transaction> currentTransactions) {
+
+    if (index > currentTransactions.size() || index < 1){
+      throw new IllegalArgumentException("The index is not valid.");
+    }
+    else{
+      Transaction toBeDeleted = currentTransactions.get(index - 1);
+      model.removeTransaction(toBeDeleted);
+      view.getTableModel().removeRow(index);
+      refresh();
+    }
+    view.unhighlightRows();
   }
 
   public void applyFilter() {
