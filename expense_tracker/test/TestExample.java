@@ -133,21 +133,21 @@ public class TestExample {
         Object[][] testAssertTable ={
                 {1, 50.0, "food", new Date().getTime()},{"Total", null, null, 50.0}
         };
-        DefaultTableModel tableModel = view.getTableModel();
+        JTable table = view.getTransactionsTable();
         Date transactionDate = null;
         try {
-            transactionDate = Transaction.dateFormatter.parse((String) tableModel.getValueAt(0, 3));
+            transactionDate = Transaction.dateFormatter.parse((String) table.getValueAt(0, 3));
         } catch (ParseException e) {
             assertNotNull(transactionDate);
         }
 
-        for (int i = 0; i < tableModel.getRowCount(); i++){
-            for (int j = 0; j < tableModel.getColumnCount(); j++){
-                if (i != tableModel.getRowCount() - 1 && j == tableModel.getColumnCount() -1){
+        for (int i = 0; i < table.getRowCount(); i++){
+            for (int j = 0; j < table.getColumnCount(); j++){
+                if (i != table.getRowCount() - 1 && j == table.getColumnCount() -1){
                     assertTrue((long) testAssertTable[i][j] - transactionDate.getTime() < 60000);
                 }
                 else{
-                    assertEquals(testAssertTable[i][j], tableModel.getValueAt(i, j));
+                    assertEquals(testAssertTable[i][j], table.getValueAt(i, j));
                 }
             }
         }
