@@ -126,6 +126,7 @@ public class TestExample {
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
         // Perform the action: Add 3 types of invalid transactions
         assertTrue(controller.addTransaction(50.0, "food"));
@@ -133,30 +134,32 @@ public class TestExample {
         Object[][] testAssertTable ={
                 {1, 50.0, "food", new Date().getTime()},{"Total", null, null, 50.0}
         };
-        DefaultTableModel tableModel = view.getTableModel();
+        JTable table = view.getTransactionsTable();
         Date transactionDate = null;
         try {
-            transactionDate = Transaction.dateFormatter.parse((String) tableModel.getValueAt(0, 3));
+            transactionDate = Transaction.dateFormatter.parse((String) table.getValueAt(0, 3));
         } catch (ParseException e) {
             assertNotNull(transactionDate);
         }
 
-        for (int i = 0; i < tableModel.getRowCount(); i++){
-            for (int j = 0; j < tableModel.getColumnCount(); j++){
-                if (i != tableModel.getRowCount() - 1 && j == tableModel.getColumnCount() -1){
+        for (int i = 0; i < table.getRowCount(); i++){
+            for (int j = 0; j < table.getColumnCount(); j++){
+                if (i != table.getRowCount() - 1 && j == table.getColumnCount() -1){
                     assertTrue((long) testAssertTable[i][j] - transactionDate.getTime() < 60000);
                 }
                 else{
-                    assertEquals(testAssertTable[i][j], tableModel.getValueAt(i, j));
+                    assertEquals(testAssertTable[i][j], table.getValueAt(i, j));
                 }
             }
         }
 
-        // Post-condition: List of transactions contains one transaction and one total row
-        assertEquals(2, view.getTableModel().getRowCount());
+        // Post-condition: List of transactions contains one transaction and two total rows
+        assertEquals(2, view.getTransactionsTable().getRowCount());
+        assertEquals(1, model.getTransactions().size());
 
         // Check the total amount
-        assertEquals(50, (double) view.getTableModel().getValueAt(1, 3), 0.01);
+        assertEquals(50, (double) view.getTransactionsTable().getValueAt(1, 3), 0.01);
+        assertEquals(50, getTotalCost(), 0.01);
     }
 
     @Test
@@ -164,8 +167,9 @@ public class TestExample {
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
-        // Perform the action: Add 3 types of invalid transactions
+        // Perform the action: Add 2 types of invalid transactions
         assertFalse(controller.addTransaction(50.0, "food-poisoning"));
         try{
             Transaction t = new Transaction(50.0, "food-poisoning");
@@ -184,6 +188,7 @@ public class TestExample {
 
         // Post-condition: List of transactions contains no transactions
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
         // Check the total amount
         assertEquals(0, getTotalCost(), 0.01);
@@ -194,6 +199,7 @@ public class TestExample {
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
         // Perform the action: Set filterType = AmountFilter with value 50
         controller.setFilter(new AmountFilter(50));
@@ -208,6 +214,10 @@ public class TestExample {
 
         JTable table = view.getTransactionsTable();
 
+        // Post-condition: List of transactions contains 3 transactions and table contains 4 rows
+        assertEquals(3, model.getTransactions().size());
+        assertEquals(4, view.getTransactionsTable().getRowCount());
+
         // Check the background of the cells of the highlighted rows... must be green.
         for(int i = 0; i < table.getRowCount(); i++) {
             for(int j = 0; j < table.getColumnCount(); j++) {
@@ -220,6 +230,11 @@ public class TestExample {
                 }
             }
         }
+
+        // Check the total amount
+        assertEquals(170, getTotalCost(), 0.01);
+        assertEquals(170, (double) view.getTransactionsTable().getValueAt(3, 3), 0.01);
+
     }
 
     @Test
@@ -227,11 +242,12 @@ public class TestExample {
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
         // Perform the action: Set filterType = CategoryFilter with value bills
         controller.setFilter(new CategoryFilter("bills"));
 
-        // Perform the action: Add transactions to the model.
+        // Perform the action: Add 3 transactions to the model.
         controller.addTransaction(50, "food");
         controller.addTransaction(70, "bills");
         controller.addTransaction(50, "bills");
@@ -240,6 +256,10 @@ public class TestExample {
         controller.applyFilter();
 
         JTable table = view.getTransactionsTable();
+
+        // Post-condition: List of transactions contains 3 transactions and table contains 4 rows
+        assertEquals(3, model.getTransactions().size());
+        assertEquals(4, view.getTransactionsTable().getRowCount());
 
         // Check the background of the cells of the highlighted rows... must be green.
         for(int i = 0; i < table.getRowCount(); i++) {
@@ -253,6 +273,11 @@ public class TestExample {
                 }
             }
         }
+
+        // Check the total amount
+        assertEquals(170, getTotalCost(), 0.01);
+        assertEquals(170, (double) view.getTransactionsTable().getValueAt(3, 3), 0.01);
+
     }
 
     @Test
@@ -260,9 +285,17 @@ public class TestExample {
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
         // Check that the undo button is disabled.
         assertFalse(view.getUndoBtn().isEnabled());
+
+        // Post-condition: List of transactions contains no transactions
+        assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
+
+        // Check the total amount
+        assertEquals(0, getTotalCost(), 0.01);
     }
 
     @Test
@@ -270,11 +303,20 @@ public class TestExample {
 
         // Pre-condition: List of transactions is empty
         assertEquals(0, model.getTransactions().size());
+        assertEquals(0, view.getTransactionsTable().getRowCount());
 
         // Perform the action: Add at least one valid transaction to the model.
         controller.addTransaction(50, "food");
 
         // Check that the undo button is enabled.
         assertTrue(view.getUndoBtn().isEnabled());
+
+        // Post-condition: List of transactions contains 1 transactions and 2 rows in the table
+        assertEquals(1, model.getTransactions().size());
+        assertEquals(2, view.getTransactionsTable().getRowCount());
+
+        // Check the total amount
+        assertEquals(50, getTotalCost(), 0.01);
+        assertEquals(50, (double) view.getTransactionsTable().getValueAt(1, 3), 0.01);
     }
 }
