@@ -153,7 +153,7 @@ public class TestExample {
             }
         }
 
-        // Post-condition: List of transactions contains one transaction and one total row
+        // Post-condition: List of transactions contains one transaction and two total rows
         assertEquals(2, view.getTransactionsTable().getRowCount());
         assertEquals(1, model.getTransactions().size());
 
