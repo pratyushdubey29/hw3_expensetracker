@@ -208,6 +208,9 @@ public class TestExample {
 
         JTable table = view.getTransactionsTable();
 
+        // Post-condition: List of transactions contains no transactions
+        assertEquals(3, model.getTransactions().size());
+
         // Check the background of the cells of the highlighted rows... must be green.
         for(int i = 0; i < table.getRowCount(); i++) {
             for(int j = 0; j < table.getColumnCount(); j++) {
@@ -220,6 +223,10 @@ public class TestExample {
                 }
             }
         }
+
+        // Check the total amount
+        assertEquals(170, getTotalCost(), 0.01);
+
     }
 
     @Test
@@ -241,6 +248,9 @@ public class TestExample {
 
         JTable table = view.getTransactionsTable();
 
+        // Post-condition: List of transactions contains no transactions
+        assertEquals(3, model.getTransactions().size());
+
         // Check the background of the cells of the highlighted rows... must be green.
         for(int i = 0; i < table.getRowCount(); i++) {
             for(int j = 0; j < table.getColumnCount(); j++) {
@@ -253,6 +263,9 @@ public class TestExample {
                 }
             }
         }
+
+        // Check the total amount
+        assertEquals(170, getTotalCost(), 0.01);
     }
 
     @Test
@@ -263,6 +276,12 @@ public class TestExample {
 
         // Check that the undo button is disabled.
         assertFalse(view.getUndoBtn().isEnabled());
+
+        // Check the total amount
+        assertEquals(0, getTotalCost(), 0.01);
+
+        // Post-condition: List of transactions contains no transactions
+        assertEquals(0, model.getTransactions().size());
     }
 
     @Test
@@ -276,5 +295,11 @@ public class TestExample {
 
         // Check that the undo button is enabled.
         assertTrue(view.getUndoBtn().isEnabled());
+
+        // Check the total amount
+        assertEquals(50, getTotalCost(), 0.01);
+
+        // Post-condition: List of transactions contains no transactions
+        assertEquals(1, model.getTransactions().size());
     }
 }
