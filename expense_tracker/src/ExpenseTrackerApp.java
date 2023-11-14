@@ -48,6 +48,12 @@ public class ExpenseTrackerApp {
               if (undoInput == null || undoInput.isEmpty()){
                   throw new IllegalArgumentException("The index is not valid.");
               }
+              try {
+                  int inputAsInteger = Integer.parseInt(undoInput);
+              }
+              catch (NumberFormatException exception){
+                  throw new IllegalArgumentException("The index is not valid.");
+              }
               controller.undoTransaction(Integer.parseInt(undoInput), currentTransactions);
               currentTransactions = model.getTransactions();
               if (currentTransactions.isEmpty()){
